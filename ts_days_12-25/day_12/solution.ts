@@ -16,7 +16,6 @@ function solution(path) {
 }
 
 class HeightMap {
-  // map: Record<string, string>
   map: string[];
   length: number; // x
   height: number; // y
@@ -27,7 +26,7 @@ class HeightMap {
     this.height = this.map.length;
   }
 
-  getStart(): Point {
+  private getStart(): Point {
     for (let y = 0; y < this.height; y++) {
       for (let x = 0; x < this.length; x++) {
         const coords: [number, number] = [x, y];
@@ -39,7 +38,7 @@ class HeightMap {
     throw new Error("Couldn't find start.");
   }
 
-  getEnd(): Point {
+  private getEnd(): Point {
     for (let y = 0; y < this.height; y++) {
       for (let x = 0; x < this.length; x++) {
         const coords: [number, number] = [x, y];
@@ -51,7 +50,7 @@ class HeightMap {
     throw new Error("Couldn't find end.");
   }
 
-  getHeight([x, y]: Point["coords"]): number {
+  private getHeight([x, y]: Point["coords"]): number {
     const char = this.map[y][x];
     // lower case: 0..25
     if (char === char.toLowerCase()) {
@@ -66,20 +65,19 @@ class HeightMap {
     throw new Error(`Unexpected char: ${char}`);
   }
 
-  isStart([x, y]: Point["coords"]): boolean {
+  private isStart([x, y]: Point["coords"]): boolean {
     return this.map[y][x] === "S";
   }
 
-  isEnd([x, y]: Point["coords"]): boolean {
+  private isEnd([x, y]: Point["coords"]): boolean {
     return this.map[y][x] === "E";
   }
 
-  isA([x, y]: Point["coords"]): boolean {
+  private isA([x, y]: Point["coords"]): boolean {
     return this.map[y][x] === "a";
   }
 
-  // returns: [[value, [coords]], ...]
-  getNeighbors({ coords: [x, y] }: Point): Point[] {
+  private getNeighbors({ coords: [x, y] }: Point): Point[] {
     const neighbors: Point[] = [];
     if (x > 0) {
       // left
@@ -104,14 +102,14 @@ class HeightMap {
     return neighbors;
   }
 
-  getHigherNeighbors(point: Point): Point[] {
+  private getHigherNeighbors(point: Point): Point[] {
     const neighbors = this.getNeighbors(point);
     return neighbors.filter(
       (n) => n.height <= this.getHeight(point.coords) + 1
     );
   }
 
-  getLowerNeighbors(point: Point): Point[] {
+  private getLowerNeighbors(point: Point): Point[] {
     const neighbors = this.getNeighbors(point);
     return neighbors.filter(
       (n) => n.height >= this.getHeight(point.coords) - 1
@@ -168,7 +166,6 @@ class HeightMap {
           return numSteps;
         }
 
-        // const neighbors = this.getNeighbors(current);
         for (const neighbor of this.getLowerNeighbors(current)) {
           if (!visited.has(`${neighbor.coords[0]}-${neighbor.coords[1]}`)) {
             queue.push(neighbor);
